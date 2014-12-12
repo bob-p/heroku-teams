@@ -1,0 +1,17 @@
+<form action="/users" method="post">
+  <label>Email:
+    <input type="text" name="email" />
+  </label>
+  <input type="submit" />
+</form>
+<ul>
+{{ range $user := . }}
+  <li>
+    <h1>{{ $user.Email }}</h1>
+    <p>Posted {{ $user.CreatedAt }}</p>
+    <form action="/users/{{ $user.Id }}/delete" method="post">
+      <input type="submit" value="remove" />
+    </form>
+  </li>
+{{ end }}
+</ul>
