@@ -6,12 +6,10 @@ import(
    _ "github.com/lib/pq"
   "github.com/jmoiron/sqlx"
   "github.com/bgentry/heroku-go"
-  "github.com/mholt/binding"
   "gopkg.in/unrolled/render.v1"
   "log"
   "net/http"
   "os"
-  "time"
 )
 
 var (
@@ -20,32 +18,6 @@ var (
   heroku_username = os.Getenv("HEROKU_USERNAME")
   heroku_pw       = os.Getenv("HEROKU_PW")
 )
-
-type User struct {
-  Id int
-  Email string
-  CreatedAt time.Time `db:"created_at"`
-}
-
-func (u *User) FieldMap() binding.FieldMap {
-  return binding.FieldMap{
-    &u.Email: "email",
-  }
-}
-
-func(u User) AddToHeroku(client heroku.Client) {
-  apps, _ := client.AppList(nil)
-  for _, app := range apps {
-    client.CollaboratorCreate(app.Id, u.Email, nil)
-  }
-}
-
-func(u User) RemoveFromHeroku(client heroku.Client) {
-  apps, _ := client.AppList(nil)
-  for _, app := range apps {
-    client.CollaboratorDelete(app.Id, u.Email)
-  }
-}
 
 type appContext struct {
   db *sqlx.DB
@@ -80,7 +52,6 @@ func(appC *appContext) usersHandler(w http.ResponseWriter, req *http.Request) {
 }
 
 func(appC * appContext) deleteUsersHandler(w http.ResponseWriter, req *http.Request) {
-  //Remove from heroku apps
   user := User{}
   err := appC.db.Get(&user, "SELECT * FROM users WHERE id = $1", req.URL.Query().Get(":id"))
 
@@ -88,6 +59,7 @@ func(appC * appContext) deleteUsersHandler(w http.ResponseWriter, req *http.Requ
     log.Print(err)
     appC.render.HTML(w, http.StatusNotFound, "404", nil)
   } else {
+    //Remove from heroku apps
     user.RemoveFromHeroku(appC.herokuClient)
 
     removeUser := "DELETE FROM users where id = $1"
