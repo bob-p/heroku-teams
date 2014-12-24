@@ -2,6 +2,10 @@ Simple web interface for managing teams on heroku
 
 psql -f database.sql
 
-HEROKU_USERNAME="username" HEROKU_PW="pw" DATABASE_URL="user=username dbname=databasename sslmode=disable" gin
+cp .env.example to .env and add relevent info
+
+docker build -t heroku-teams .
+
+docker run -d -p 8080:3000 --name myapp heroku-teams
 
 goconvey

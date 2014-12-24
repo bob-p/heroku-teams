@@ -34,6 +34,11 @@
 			"Rev": "7172c4f697fe8b4743fc8e9410fa161fc4623628"
 		},
 		{
+			"ImportPath": "github.com/joho/godotenv",
+			"Comment": "v1",
+			"Rev": "a01a834e1654b4c9ca5b3ad05159445cc9c7ad08"
+		},
+		{
 			"ImportPath": "github.com/lib/pq",
 			"Rev": "7175accbed18058468c07811f76440d6e8d7cf19"
 		},

@@ -6,11 +6,14 @@ import(
   "time"
 )
 
+// User model
 type User struct {
-  Id int
+  ID int
   Email string
   CreatedAt time.Time `db:"created_at"`
 }
+
+type Users []User
 
 func (u *User) FieldMap() binding.FieldMap {
   return binding.FieldMap{
