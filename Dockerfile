@@ -10,6 +10,3 @@ RUN godep restore
 
 RUN go get github.com/codegangsta/gin
 
-ENTRYPOINT gin
-
-EXPOSE 3000
